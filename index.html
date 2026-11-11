@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sierpc – mapa turystyczna</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+  html,body{height:100%;margin:0;font-family:Arial,sans-serif}
+  #map{height:100%;width:100%}
+  .legend{position:absolute;z-index:1000;bottom:18px;left:12px;background:white;padding:10px 12px;border-radius:8px;box-shadow:0 1px 8px #0003;font-size:13px;line-height:1.5;max-width:220px}
+  .legend strong{display:block;margin-bottom:3px}
+  .leaflet-popup-content{font-size:14px;line-height:1.45}
+  .leaflet-popup-content b{font-size:15px}
+</style>
+</head>
+<body>
+<div id="map" role="application" aria-label="Interaktywna mapa turystyczna Sierpca"></div>
+<div class="legend"><strong>Sierpc – mapa turystyczna</strong>Wybierz znacznik, aby zobaczyć opis miejsca. Przybliżaj i przesuwaj mapę.</div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+const map = L.map('map').setView([52.8565,19.6690],14);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+  maxZoom:19, attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+}).addTo(map);
+const places = [
+ {name:'Centrum Sierpca',coords:[52.8565,19.6690],desc:'Sierpc – miasto na północnym Mazowszu.'},
+ {name:'Muzeum Wsi Mazowieckiej (skansen)',coords:[52.8648,19.6788],desc:'Muzeum prezentujące tradycyjną zabudowę i kulturę mazowieckiej wsi.'},
+ {name:'Kościół farny pw. św. Wita, Modesta i Krescencji',coords:[52.8552,19.6674],desc:'Historyczna świątynia związana z dziejami miasta.'},
+ {name:'Sanktuarium Matki Bożej Sierpeckiej na wzgórzu Loret',coords:[52.8517,19.6718],desc:'Ważne miejsce kultu maryjnego w Sierpcu.'},
+ {name:'Kościół św. Ducha',coords:[52.8575,19.6652],desc:'Zabytkowy kościół w historycznej części miasta.'},
+ {name:'Ratusz / Stary Rynek',coords:[52.8562,19.6683],desc:'Centralna część miasta i punkt orientacyjny podczas spaceru.'},
+ {name:'Opactwo Benedyktynek',coords:[52.8543,19.6640],desc:'Zespół klasztorny będący częścią dziedzictwa sakralnego Sierpca.'}
+];
+places.forEach((p,i)=>{
+ const marker=L.marker(p.coords).addTo(map);
+ marker.bindPopup('<b>'+p.name+'</b><br>'+p.desc);
+ if(i===0) marker.bindTooltip('Sierpc',{permanent:true,direction:'top',offset:[0,-8]});
+});
+const bounds=L.latLngBounds(places.map(p=>p.coords));
+map.fitBounds(bounds.pad(0.18));
+</script>
+</body>
+</html>
